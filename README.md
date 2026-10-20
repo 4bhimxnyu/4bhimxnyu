@@ -78,7 +78,9 @@ for a hospitality brand at Bunkout.
 <!-- Generated daily by scripts/update_readme.py. Edit the script, not this block. -->
 | On GitHub since | Days with contributions | Total commits | Public repositories |
 |:--|:--|:--|:--|
-| — | — | — | — |
+| December 2022 (1,404 days) | 192 | 571 | 34 |
+
+<sub>Updated 20 Oct 2026.</sub>
 <!-- STATS:END -->
 
 <picture>
@@ -92,7 +94,14 @@ for a hospitality brand at Bunkout.
 <!-- Generated daily by scripts/update_readme.py from commit counts. Edit the script, not this table. -->
 | Repository | Commits | Language | Last push |
 |:--|--:|:--|:--|
-| — | — | — | — |
+| [Cohort_Playlist](https://github.com/4bhimxnyu/Cohort_Playlist) | 122 | JavaScript | 2026-03-24 |
+| [Pixel-Art-Adventure-Game.](https://github.com/4bhimxnyu/Pixel-Art-Adventure-Game.) | 105 | TypeScript | 2026-10-17 |
+| [Data-Structure-Algorithm.py](https://github.com/4bhimxnyu/Data-Structure-Algorithm.py) | 62 | Python | 2024-12-14 |
+| [TextForm-WebPlay](https://github.com/4bhimxnyu/TextForm-WebPlay) | 50 | JavaScript | 2025-01-14 |
+| [What-i-ve-Built](https://github.com/4bhimxnyu/What-i-ve-Built) | 50 | JavaScript | 2026-07-10 |
+| [Fibonacci.exe](https://github.com/4bhimxnyu/Fibonacci.exe) | 25 | HTML | 2025-01-06 |
+| [Mongo-database-tutorial](https://github.com/4bhimxnyu/Mongo-database-tutorial) | 20 | JavaScript | 2024-12-13 |
+| [React-tutorial](https://github.com/4bhimxnyu/React-tutorial) | 14 | JavaScript | 2024-10-02 |
 <!-- REPOS:END -->
 
 <br>
