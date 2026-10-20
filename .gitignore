@@ -4,3 +4,4 @@ __pycache__/
 Thumbs.db
 # local screenshots and scratch files
 Screenshot*.png
+.playwright-mcp/
