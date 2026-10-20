@@ -1,0 +1,5 @@
+# Only needed for scripts/matrix_portrait.py (update_readme.py is stdlib only)
+pillow>=10
+numpy>=1.26
+# Optional: cleaner portrait by removing the photo background first
+rembg[cpu]>=2.0

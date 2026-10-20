@@ -1,0 +1,42 @@
+# Refreshes the live numbers in README.md once a day (and on demand).
+# See scripts/update_readme.py for what gets written.
+name: Update README stats
+
+on:
+  schedule:
+    - cron: "17 0 * * *"        # every day at 00:17 UTC
+  workflow_dispatch:            # "Run workflow" button in the Actions tab
+  push:
+    branches: [main]
+    paths:
+      - "scripts/update_readme.py"
+      - ".github/workflows/update-stats.yml"
+
+permissions:
+  contents: write
+
+jobs:
+  update:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Rewrite the stats blocks
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: python scripts/update_readme.py
+
+      - name: Commit if anything changed
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          if git diff --quiet; then
+            echo "README already up to date"
+          else
+            git commit -am "chore: refresh README stats"
+            git push
+          fi
