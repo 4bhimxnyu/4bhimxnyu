@@ -79,10 +79,6 @@ PostgreSQL / Supabase, Redis, Docker, and AI-assisted development with local LLM
   <img src="https://github-readme-stats.vercel.app/api/top-langs/?username=4bhimxnyu&layout=compact&langs_count=8&hide_border=true&bg_color=0d1117&title_color=00ff41&text_color=c9d1d9" alt="Most used languages" height="180">
 </p>
 
-<p align="center">
-  <img src="https://github-readme-activity-graph.vercel.app/graph?username=4bhimxnyu&bg_color=0d1117&color=c9d1d9&line=00ff41&point=ffffff&area=true&area_color=00ff41&hide_border=true&custom_title=Commit%20activity%2C%20last%2031%20days" alt="Commit activity graph" width="100%">
-</p>
-
 <!-- ===== SECTION: most committed repos (auto-updated) ===== -->
 ## Most committed repositories
 
