@@ -64,7 +64,7 @@ PostgreSQL / Supabase, Redis, Docker, and AI-assisted development with local LLM
 <!-- This block is generated daily. Edit scripts/update_readme.py to change it. -->
 | Days on GitHub | Days with commits | Current streak | Longest streak | Total commits | Public repos |
 |:--:|:--:|:--:|:--:|:--:|:--:|
-| **1,404** <br><sub>since Dec 15, 2022</sub> | — | — | — | **568** | **33** |
+| **1,404** <br><sub>since Dec 15, 2022</sub> | **192** | **1** days | **12** days | **569** | **34** |
 
 <sub>Last updated Oct 20, 2026 (UTC).</sub>
 <!-- STATS:END -->
@@ -93,8 +93,8 @@ PostgreSQL / Supabase, Redis, Docker, and AI-assisted development with local LLM
 | 1 | [Cohort_Playlist](https://github.com/4bhimxnyu/Cohort_Playlist) | 122 | JavaScript | 2026-03-24 |
 | 2 | [Pixel-Art-Adventure-Game.](https://github.com/4bhimxnyu/Pixel-Art-Adventure-Game.) | 105 | TypeScript | 2026-10-17 |
 | 3 | [Data-Structure-Algorithm.py](https://github.com/4bhimxnyu/Data-Structure-Algorithm.py) | 62 | Python | 2024-12-14 |
-| 4 | [What-i-ve-Built](https://github.com/4bhimxnyu/What-i-ve-Built) | 50 | JavaScript | 2026-07-10 |
-| 5 | [TextForm-WebPlay](https://github.com/4bhimxnyu/TextForm-WebPlay) | 50 | JavaScript | 2025-01-14 |
+| 4 | [TextForm-WebPlay](https://github.com/4bhimxnyu/TextForm-WebPlay) | 50 | JavaScript | 2025-01-14 |
+| 5 | [What-i-ve-Built](https://github.com/4bhimxnyu/What-i-ve-Built) | 50 | JavaScript | 2026-07-10 |
 | 6 | [Fibonacci.exe](https://github.com/4bhimxnyu/Fibonacci.exe) | 25 | HTML | 2025-01-06 |
 | 7 | [Mongo-database-tutorial](https://github.com/4bhimxnyu/Mongo-database-tutorial) | 20 | JavaScript | 2024-12-13 |
 | 8 | [React-tutorial](https://github.com/4bhimxnyu/React-tutorial) | 14 | JavaScript | 2024-10-02 |
