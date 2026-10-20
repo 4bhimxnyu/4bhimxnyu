@@ -63,14 +63,12 @@ for a hospitality brand at Bunkout.
 
 ## Skills
 
-| | |
-|:--|:--|
-| **Languages** | TypeScript, JavaScript, Python, Java, SQL, HTML, CSS |
-| **Frontend** | React, Next.js, React Native, Expo, Vite, Tailwind CSS, Zustand, TanStack Query |
-| **Backend** | Node.js, Express, REST APIs, Zod, JWT authentication |
-| **Databases** | PostgreSQL, Supabase, Redis, MongoDB, Drizzle ORM |
-| **DevOps and tools** | Docker, GitHub Actions, Git, Vercel, Netlify, EAS, TestFlight, Vitest, Figma |
-| **AI** | LLMs, Ollama, AI-assisted development with Claude Code |
+- **Languages:** TypeScript, JavaScript, Python, Java, SQL, HTML, CSS
+- **Frontend:** React, Next.js, React Native, Expo, Vite, Tailwind CSS, Zustand, TanStack Query
+- **Backend:** Node.js, Express, REST APIs, Zod, JWT authentication
+- **Databases:** PostgreSQL, Supabase, Redis, MongoDB, Drizzle ORM
+- **DevOps and tools:** Docker, GitHub Actions, Git, Vercel, Netlify, EAS, TestFlight, Vitest, Figma
+- **AI:** LLMs, Ollama, AI-assisted development with Claude Code
 
 ## GitHub
 
