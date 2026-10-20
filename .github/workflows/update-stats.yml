@@ -25,7 +25,7 @@ jobs:
         with:
           python-version: "3.12"
 
-      - name: Rewrite the stats blocks
+      - name: Rewrite the stats blocks and contribution calendar
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: python scripts/update_readme.py
@@ -34,9 +34,10 @@ jobs:
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          if git diff --quiet; then
-            echo "README already up to date"
+          git add -A
+          if git diff --cached --quiet; then
+            echo "already up to date"
           else
-            git commit -am "chore: refresh README stats"
+            git commit -m "chore: refresh README stats"
             git push
           fi

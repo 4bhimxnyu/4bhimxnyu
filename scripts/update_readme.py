@@ -1,19 +1,19 @@
 """
-Refreshes the auto-generated blocks in README.md with live GitHub numbers.
+Refreshes the auto-generated parts of this profile with live GitHub data.
 
 Runs daily from .github/workflows/update-stats.yml. You can also run it locally:
     set GITHUB_TOKEN=<a personal access token>     (Windows)
     python scripts/update_readme.py
 
-Without a token it still fills in what the public API allows (days on GitHub,
-total commits, repo table) and leaves the streak columns as "—".
+What it writes
+  README.md   the text between  <!-- STATS:START --> ... <!-- STATS:END -->
+              and                <!-- REPOS:START --> ... <!-- REPOS:END -->
+  assets/contributions-light.svg and -dark.svg   the contribution calendar
 
-It rewrites only the text between these marker pairs:
-    <!-- STATS:START --> ... <!-- STATS:END -->
-    <!-- REPOS:START --> ... <!-- REPOS:END -->
-Everything else in README.md is left untouched.
+Everything else in README.md is left untouched. Without a token it still
+fills what the public API allows and skips the calendar and active-day count.
 
-Standard library only, no packages to install.
+Standard library only, nothing to install.
 """
 from __future__ import annotations
 
@@ -27,10 +27,19 @@ from datetime import date, datetime, timedelta, timezone
 
 USER = "4bhimxnyu"
 README = "README.md"
-TOP_N = 8                       # rows in the "most committed repos" table
+CALENDAR_OUT = "assets/contributions-{theme}.svg"
+TOP_N = 8                       # rows in the "most committed repositories" table
 TOKEN = os.environ.get("GITHUB_TOKEN", "")
 
+# GitHub's own contribution-graph colours, level 0 (none) to 4 (most).
+PALETTES = {
+    "light": {"cells": ["#ebedf0", "#9be9a8", "#40c463", "#30a14e", "#216e39"], "text": "#57606a"},
+    "dark":  {"cells": ["#161b22", "#0e4429", "#006d32", "#26a641", "#39d353"], "text": "#8b949e"},
+}
+LEVELS = {"NONE": 0, "FIRST_QUARTILE": 1, "SECOND_QUARTILE": 2, "THIRD_QUARTILE": 3, "FOURTH_QUARTILE": 4}
 
+
+# -------------------------------------------------------------------- API ---
 def api(url: str, method: str = "GET", data: dict | None = None):
     headers = {"Accept": "application/vnd.github+json", "User-Agent": "profile-readme-updater"}
     if TOKEN:
@@ -51,6 +60,28 @@ def graphql(query: str, variables: dict):
     return res["data"]
 
 
+CALENDAR_QUERY = """
+query($login:String!, $from:DateTime, $to:DateTime) {
+  user(login:$login) {
+    contributionsCollection(from:$from, to:$to) {
+      contributionCalendar {
+        totalContributions
+        weeks { contributionDays { date contributionCount contributionLevel } }
+      }
+    }
+  }
+}"""
+
+
+def calendar(from_: datetime | None = None, to: datetime | None = None) -> dict:
+    v = {"login": USER}
+    if from_:
+        v["from"] = from_.isoformat()
+    if to:
+        v["to"] = to.isoformat()
+    return graphql(CALENDAR_QUERY, v)["user"]["contributionsCollection"]["contributionCalendar"]
+
+
 # ----------------------------------------------------------------- numbers ---
 def account_created() -> datetime:
     _, u = api(f"https://api.github.com/users/{USER}")
@@ -62,48 +93,15 @@ def total_commits() -> int:
     return int(res.get("total_count", 0))
 
 
-def contribution_days(since: datetime) -> dict[date, int]:
-    """Every day since account creation -> contribution count (GraphQL calendar, one year per call)."""
-    q = """
-    query($login:String!, $from:DateTime!, $to:DateTime!) {
-      user(login:$login) {
-        contributionsCollection(from:$from, to:$to) {
-          contributionCalendar { weeks { contributionDays { date contributionCount } } }
-        }
-      }
-    }"""
-    days: dict[date, int] = {}
-    start = since
-    now = datetime.now(timezone.utc)
+def active_days(since: datetime) -> int:
+    """Number of days with at least one contribution since the account was created."""
+    count, start, now = 0, since, datetime.now(timezone.utc)
     while start < now:
         end = min(start + timedelta(days=364), now)
-        data = graphql(q, {"login": USER, "from": start.isoformat(), "to": end.isoformat()})
-        for week in data["user"]["contributionsCollection"]["contributionCalendar"]["weeks"]:
-            for d in week["contributionDays"]:
-                days[date.fromisoformat(d["date"])] = d["contributionCount"]
+        for week in calendar(start, end)["weeks"]:
+            count += sum(1 for d in week["contributionDays"] if d["contributionCount"] > 0)
         start = end + timedelta(days=1)
-    return days
-
-
-def streaks(days: dict[date, int]) -> tuple[int, int, int]:
-    """(days with contributions, current streak, longest streak)."""
-    active = sorted(d for d, n in days.items() if n > 0)
-    if not active:
-        return 0, 0, 0
-    longest = run = 1
-    for prev, cur in zip(active, active[1:]):
-        run = run + 1 if (cur - prev).days == 1 else 1
-        longest = max(longest, run)
-    today = datetime.now(timezone.utc).date()
-    current = 0
-    if (today - active[-1]).days <= 1:          # still alive if active today or yesterday
-        current = 1
-        for prev, cur in zip(reversed(active[:-1]), reversed(active)):
-            if (cur - prev).days == 1:
-                current += 1
-            else:
-                break
-    return len(active), current, longest
+    return count
 
 
 def repos_by_commits() -> list[dict]:
@@ -128,6 +126,48 @@ def repos_by_commits() -> list[dict]:
     return rows
 
 
+# ---------------------------------------------------------------- calendar ---
+def calendar_svg(cal: dict, theme: str) -> str:
+    """Draws the last year of contributions the way GitHub does: 7 rows, one column per week."""
+    p = PALETTES[theme]
+    cell, gap, left, top = 10, 3, 28, 20
+    weeks = cal["weeks"]
+    width = left + len(weeks) * (cell + gap) + 4
+    height = top + 7 * (cell + gap) + 28
+    out = [f'<svg xmlns="http://www.w3.org/2000/svg" width="{width}" height="{height}" '
+           f'viewBox="0 0 {width} {height}" font-family="-apple-system, BlinkMacSystemFont, \'Segoe UI\', '
+           f'\'Noto Sans\', Helvetica, Arial, sans-serif" font-size="10" fill="{p["text"]}">']
+    # Day labels, like GitHub: Mon / Wed / Fri.
+    for row, label in ((1, "Mon"), (3, "Wed"), (5, "Fri")):
+        out.append(f'<text x="0" y="{top + row * (cell + gap) + cell - 1}">{label}</text>')
+    # Month labels where a new month starts in a week's first day.
+    last_month = None
+    for wi, week in enumerate(weeks):
+        first = date.fromisoformat(week["contributionDays"][0]["date"])
+        if first.month != last_month:
+            if last_month is not None or wi == 0:
+                out.append(f'<text x="{left + wi * (cell + gap)}" y="{top - 8}">{first:%b}</text>')
+            last_month = first.month
+    # Cells.
+    for wi, week in enumerate(weeks):
+        for d in week["contributionDays"]:
+            row = (date.fromisoformat(d["date"]).weekday() + 1) % 7      # Sunday = 0, like GitHub
+            x, y = left + wi * (cell + gap), top + row * (cell + gap)
+            colour = p["cells"][LEVELS.get(d["contributionLevel"], 0)]
+            out.append(f'<rect x="{x}" y="{y}" width="{cell}" height="{cell}" rx="2" fill="{colour}">'
+                       f'<title>{d["contributionCount"]} contributions on {d["date"]}</title></rect>')
+    # Footer: total on the left, legend on the right.
+    fy = top + 7 * (cell + gap) + 18
+    out.append(f'<text x="{left}" y="{fy}">{cal["totalContributions"]:,} contributions in the last year</text>')
+    lx = width - 4 - 5 * (cell + gap) - 34
+    out.append(f'<text x="{lx - 26}" y="{fy}">Less</text>')
+    for i, colour in enumerate(p["cells"]):
+        out.append(f'<rect x="{lx + i * (cell + gap)}" y="{fy - cell + 1}" width="{cell}" height="{cell}" rx="2" fill="{colour}"/>')
+    out.append(f'<text x="{lx + 5 * (cell + gap) + 2}" y="{fy}">More</text>')
+    out.append("</svg>\n")
+    return "\n".join(out)
+
+
 # ------------------------------------------------------------------ render ---
 def replace_block(text: str, tag: str, body: str) -> str:
     start, end = f"<!-- {tag}:START -->", f"<!-- {tag}:END -->"
@@ -144,33 +184,36 @@ def main():
     commits = total_commits()
     repos = repos_by_commits()
 
+    active = "—"
     if TOKEN:
-        active, current, longest = streaks(contribution_days(created))
-        active_s, current_s, longest_s = f"**{active:,}**", f"**{current}** days", f"**{longest}** days"
+        active = f"{active_days(created):,}"
+        last_year = calendar()
+        os.makedirs("assets", exist_ok=True)
+        for theme in PALETTES:
+            with open(CALENDAR_OUT.format(theme=theme), "w", encoding="utf-8", newline="\n") as f:
+                f.write(calendar_svg(last_year, theme))
     else:
-        active_s = current_s = longest_s = "—"
+        print("no GITHUB_TOKEN: skipping active-day count and contribution calendar")
 
     stats = (
-        "<!-- This block is generated daily. Edit scripts/update_readme.py to change it. -->\n"
-        "| Days on GitHub | Days with commits | Current streak | Longest streak | Total commits | Public repos |\n"
-        "|:--:|:--:|:--:|:--:|:--:|:--:|\n"
-        f"| **{days_on_github:,}** <br><sub>since {created:%b %d, %Y}</sub> "
-        f"| {active_s} | {current_s} | {longest_s} | **{commits:,}** | **{len(repos)}** |\n"
-        f"\n<sub>Last updated {now:%b %d, %Y} (UTC).</sub>"
+        "<!-- Generated daily by scripts/update_readme.py. Edit the script, not this block. -->\n"
+        "| On GitHub since | Days with contributions | Total commits | Public repositories |\n"
+        "|:--|:--|:--|:--|\n"
+        f"| {created:%B %Y} ({days_on_github:,} days) | {active} | {commits:,} | {len(repos)} |\n"
+        f"\n<sub>Updated {now:%d %b %Y}.</sub>"
     )
 
-    lines = ["<!-- This table is generated daily from commit counts. Edit scripts/update_readme.py to change it. -->",
-             "| # | Repository | Commits | Language | Last push |",
-             "|:-:|:--|--:|:--|:--|"]
-    for i, r in enumerate(repos[:TOP_N], 1):
-        lines.append(f"| {i} | [{r['name']}]({r['url']}) | {r['commits']} | {r['language']} | {r['pushed']} |")
+    lines = ["<!-- Generated daily by scripts/update_readme.py from commit counts. Edit the script, not this table. -->",
+             "| Repository | Commits | Language | Last push |",
+             "|:--|--:|:--|:--|"]
+    for r in repos[:TOP_N]:
+        lines.append(f"| [{r['name']}]({r['url']}) | {r['commits']} | {r['language']} | {r['pushed']} |")
 
     text = open(README, encoding="utf-8").read()
     text = replace_block(text, "STATS", stats)
     text = replace_block(text, "REPOS", "\n".join(lines))
     open(README, "w", encoding="utf-8", newline="\n").write(text)
-    print(f"updated: {days_on_github} days on GitHub, streaks {active_s}/{current_s}/{longest_s}, "
-          f"{commits} commits, {len(repos)} repos")
+    print(f"updated: {days_on_github} days on GitHub, {active} active days, {commits} commits, {len(repos)} repos")
 
 
 if __name__ == "__main__":
