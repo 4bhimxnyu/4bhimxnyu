@@ -76,9 +76,9 @@ for a hospitality brand at Bunkout.
 <!-- Generated daily by scripts/update_readme.py. Edit the script, not this block. -->
 | On GitHub since | Days with contributions | Total commits | Public repositories |
 |:--|:--|:--|:--|
-| December 2022 (1,409 days) | 193 | 581 | 34 |
+| December 2022 (1,410 days) | 197 | 590 | 34 |
 
-<sub>Updated 25 Oct 2026.</sub>
+<sub>Updated 26 Oct 2026.</sub>
 <!-- STATS:END -->
 
 <picture>
@@ -99,7 +99,7 @@ for a hospitality brand at Bunkout.
 | [What-i-ve-Built](https://github.com/4bhimxnyu/What-i-ve-Built) | 50 | JavaScript | 2026-07-10 |
 | [Fibonacci.exe](https://github.com/4bhimxnyu/Fibonacci.exe) | 25 | HTML | 2025-01-06 |
 | [Mongo-database-tutorial](https://github.com/4bhimxnyu/Mongo-database-tutorial) | 20 | JavaScript | 2024-12-13 |
-| [React-tutorial](https://github.com/4bhimxnyu/React-tutorial) | 14 | JavaScript | 2024-10-02 |
+| [Scrum-Local-LLM](https://github.com/4bhimxnyu/Scrum-Local-LLM) | 16 | JavaScript | 2026-10-25 |
 <!-- REPOS:END -->
 
 <br>
