@@ -76,9 +76,9 @@ for a hospitality brand at Bunkout.
 <!-- Generated daily by scripts/update_readme.py. Edit the script, not this block. -->
 | On GitHub since | Days with contributions | Total commits | Public repositories |
 |:--|:--|:--|:--|
-| December 2022 (1,423 days) | 206 | 577 | 34 |
+| December 2022 (1,424 days) | 207 | 577 | 34 |
 
-<sub>Updated 08 Nov 2026.</sub>
+<sub>Updated 09 Nov 2026.</sub>
 <!-- STATS:END -->
 
 <picture>
@@ -97,8 +97,8 @@ for a hospitality brand at Bunkout.
 | [Data-Structure-Algorithm.py](https://github.com/4bhimxnyu/Data-Structure-Algorithm.py) | 62 | Python | 2024-12-14 |
 | [TextForm-WebPlay](https://github.com/4bhimxnyu/TextForm-WebPlay) | 50 | JavaScript | 2025-01-14 |
 | [What-i-ve-Built](https://github.com/4bhimxnyu/What-i-ve-Built) | 50 | JavaScript | 2026-07-10 |
+| [4bhimxnyu](https://github.com/4bhimxnyu/4bhimxnyu) | 26 | Python | 2026-11-08 |
 | [Fibonacci.exe](https://github.com/4bhimxnyu/Fibonacci.exe) | 25 | HTML | 2025-01-06 |
-| [4bhimxnyu](https://github.com/4bhimxnyu/4bhimxnyu) | 25 | Python | 2026-11-07 |
 | [Mongo-database-tutorial](https://github.com/4bhimxnyu/Mongo-database-tutorial) | 20 | JavaScript | 2024-12-13 |
 <!-- REPOS:END -->
 
