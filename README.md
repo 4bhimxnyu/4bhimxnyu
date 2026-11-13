@@ -76,9 +76,9 @@ for a hospitality brand at Bunkout.
 <!-- Generated daily by scripts/update_readme.py. Edit the script, not this block. -->
 | On GitHub since | Days with contributions | Total commits | Public repositories |
 |:--|:--|:--|:--|
-| December 2022 (1,427 days) | 210 | 591 | 35 |
+| December 2022 (1,428 days) | 211 | 594 | 35 |
 
-<sub>Updated 12 Nov 2026.</sub>
+<sub>Updated 13 Nov 2026.</sub>
 <!-- STATS:END -->
 
 <picture>
@@ -97,9 +97,9 @@ for a hospitality brand at Bunkout.
 | [Data-Structure-Algorithm.py](https://github.com/4bhimxnyu/Data-Structure-Algorithm.py) | 62 | Python | 2024-12-14 |
 | [TextForm-WebPlay](https://github.com/4bhimxnyu/TextForm-WebPlay) | 50 | JavaScript | 2025-01-14 |
 | [What-i-ve-Built](https://github.com/4bhimxnyu/What-i-ve-Built) | 50 | JavaScript | 2026-07-10 |
-| [4bhimxnyu](https://github.com/4bhimxnyu/4bhimxnyu) | 29 | Python | 2026-11-11 |
+| [4bhimxnyu](https://github.com/4bhimxnyu/4bhimxnyu) | 30 | Python | 2026-11-12 |
 | [Fibonacci.exe](https://github.com/4bhimxnyu/Fibonacci.exe) | 25 | HTML | 2025-01-06 |
-| [Mongo-database-tutorial](https://github.com/4bhimxnyu/Mongo-database-tutorial) | 20 | JavaScript | 2024-12-13 |
+| [ancesra-website](https://github.com/4bhimxnyu/ancesra-website) | 22 | JavaScript | 2026-11-12 |
 <!-- REPOS:END -->
 
 <br>
