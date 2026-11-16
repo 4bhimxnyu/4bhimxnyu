@@ -7,11 +7,11 @@ Runs daily from .github/workflows/update-stats.yml. You can also run it locally:
 
 What it writes
   README.md   the text between  <!-- STATS:START --> ... <!-- STATS:END -->
-              and                <!-- REPOS:START --> ... <!-- REPOS:END -->
+              and                <!-- REPOS:START --> ... <!-- REPOS:END -->   (latest projects)
   assets/contributions-light.svg and -dark.svg   the contribution calendar
 
-Everything else in README.md is left untouched. Without a token it still
-fills what the public API allows and skips the calendar and active-day count.
+Everything else in README.md is left untouched. Without a token it only
+refreshes the projects table.
 
 Standard library only, nothing to install.
 """
@@ -28,7 +28,7 @@ from datetime import date, datetime, timedelta, timezone
 USER = "4bhimxnyu"
 README = "README.md"
 CALENDAR_OUT = "assets/contributions-{theme}.svg"
-TOP_N = 8                       # rows in the "most committed repositories" table
+TOP_N = 6                       # rows in the projects table
 TOKEN = os.environ.get("GITHUB_TOKEN", "")
 
 # GitHub's own contribution-graph colours, level 0 (none) to 4 (most).
@@ -104,26 +104,21 @@ def active_days(since: datetime) -> int:
     return count
 
 
-def repos_by_commits() -> list[dict]:
-    _, repos = api(f"https://api.github.com/users/{USER}/repos?per_page=100&type=owner")
-    rows = []
-    for r in repos:
-        if r["fork"]:
-            continue
-        try:
-            headers, first = api(f"https://api.github.com/repos/{USER}/{r['name']}/commits?per_page=1")
-        except urllib.error.HTTPError as e:
-            if e.code == 409:                       # empty repository, no commits yet
-                continue
-            sys.exit(f"could not count commits for {r['name']}: {e} (rate limited? set GITHUB_TOKEN)")
-        m = re.search(r'page=(\d+)>; rel="last"', headers.get("Link", "") or "")
-        count = int(m.group(1)) if m else len(first)
-        rows.append({
-            "name": r["name"], "url": r["html_url"], "commits": count,
-            "language": r["language"] or "—", "pushed": r["pushed_at"][:10],
-        })
-    rows.sort(key=lambda x: (-x["commits"], x["pushed"]))
-    return rows
+def first_sentence(text: str, limit: int = 110) -> str:
+    """The opening clause of a repo description, so the table stays short."""
+    text = re.split(r"(?<=[^.])[.:] ", text.strip(), maxsplit=1)[0].rstrip(".")
+    return text if len(text) <= limit else text[:limit].rsplit(" ", 1)[0] + "…"
+
+
+def own_repos() -> list[dict]:
+    """Public non-fork repos, most recently pushed first."""
+    _, repos = api(f"https://api.github.com/users/{USER}/repos?per_page=100&type=owner&sort=pushed")
+    return [r for r in repos if not r["fork"]]
+
+
+def latest_projects(repos: list[dict]) -> list[dict]:
+    """The newest repos worth showing: skips this profile repo and repos with no description."""
+    return [r for r in repos if r["name"] != USER and r["description"]][:TOP_N]
 
 
 # ---------------------------------------------------------------- calendar ---
@@ -182,7 +177,7 @@ def main():
     now = datetime.now(timezone.utc)
     days_on_github = (now - created).days
     commits = total_commits()
-    repos = repos_by_commits()
+    repos = own_repos()
 
     active = "—"
     if TOKEN:
@@ -193,7 +188,7 @@ def main():
             with open(CALENDAR_OUT.format(theme=theme), "w", encoding="utf-8", newline="\n") as f:
                 f.write(calendar_svg(last_year, theme))
     else:
-        print("no GITHUB_TOKEN: skipping active-day count and contribution calendar")
+        print("no GITHUB_TOKEN: only refreshing the projects table")
 
     stats = (
         "<!-- Generated daily by scripts/update_readme.py. Edit the script, not this block. -->\n"
@@ -203,14 +198,18 @@ def main():
         f"\n<sub>Updated {now:%d %b %Y}.</sub>"
     )
 
-    lines = ["<!-- Generated daily by scripts/update_readme.py from commit counts. Edit the script, not this table. -->",
-             "| Repository | Commits | Language | Last push |",
-             "|:--|--:|:--|:--|"]
-    for r in repos[:TOP_N]:
-        lines.append(f"| [{r['name']}]({r['url']}) | {r['commits']} | {r['language']} | {r['pushed']} |")
+    lines = ["<!-- Generated daily by scripts/update_readme.py: your most recently pushed repos. Edit the script, not this table. -->",
+             "| Project | What it is | Language | Updated |",
+             "|:--|:--|:--|:--|"]
+    for r in latest_projects(repos):
+        pushed = datetime.fromisoformat(r["pushed_at"].replace("Z", "+00:00"))
+        live = f" · [live]({r['homepage']})" if r["homepage"] else ""
+        what = first_sentence(r["description"]).replace("|", "\\|")
+        lines.append(f"| [{r['name'].rstrip('.')}]({r['html_url']}){live} | {what} | {r['language'] or '—'} | {pushed:%d %b %Y} |")
 
     text = open(README, encoding="utf-8").read()
-    text = replace_block(text, "STATS", stats)
+    if TOKEN:                                   # without a token the numbers would be incomplete
+        text = replace_block(text, "STATS", stats)
     text = replace_block(text, "REPOS", "\n".join(lines))
     open(README, "w", encoding="utf-8", newline="\n").write(text)
     print(f"updated: {days_on_github} days on GitHub, {active} active days, {commits} commits, {len(repos)} repos")
