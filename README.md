@@ -43,7 +43,7 @@ I build products end to end, from the interface to the systems behind it.
 <!-- Generated daily by scripts/update_readme.py: your most recently pushed repos. Edit the script, not this table. -->
 | Project | What it is | Language | Updated |
 |:--|:--|:--|:--|
-| [ancesra-website](https://github.com/4bhimxnyu/ancesra-website) · [live](https://ancesra.vercel.app) | Website for ancesra ai, the free AI assistant that runs 100% offline on your laptop | JavaScript | 17 Nov 2026 |
+| [ancesra-website](https://github.com/4bhimxnyu/ancesra-website) · [live](https://ancesra.vercel.app) | Website for ancesra ai, the free AI assistant that runs 100% offline on your laptop | JavaScript | 18 Nov 2026 |
 | [Ancesra-releases](https://github.com/4bhimxnyu/Ancesra-releases) · [live](https://ancesra.vercel.app) | Download Ancesra AI (formerly Nexus) | — | 16 Nov 2026 |
 | [Mextropic-AI-](https://github.com/4bhimxnyu/Mextropic-AI-) · [live](https://site-seven-blush-91.vercel.app) | Website for Mextropic AI, lab data infrastructure for AI-led drug discovery | JavaScript | 29 Oct 2026 |
 | [Redis-based-weather-app](https://github.com/4bhimxnyu/Redis-based-weather-app.) · [live](https://redis-based-weather-app.vercel.app) | A responsive weather forecasting app built with vanilla HTML, CSS, JavaScript, Express.js, and Redis caching,… | JavaScript | 22 Oct 2026 |
@@ -64,9 +64,9 @@ I build products end to end, from the interface to the systems behind it.
 <!-- Generated daily by scripts/update_readme.py. Edit the script, not this block. -->
 | On GitHub since | Days with contributions | Total commits | Public repositories |
 |:--|:--|:--|:--|
-| December 2022 (1,432 days) | 215 | 602 | 35 |
+| December 2022 (1,433 days) | 216 | 605 | 35 |
 
-<sub>Updated 17 Nov 2026.</sub>
+<sub>Updated 18 Nov 2026.</sub>
 <!-- STATS:END -->
 
 <picture>
